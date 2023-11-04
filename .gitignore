@@ -1,0 +1,3 @@
+
+#igniore le fichier player dans le dossier data du jeu 
+/data/game/player.lua
