@@ -4,7 +4,8 @@ local gameManager ={}
 
 
 gameManager.load = function()
-    
+
+        
         player.load()
 end
 

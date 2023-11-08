@@ -3,7 +3,9 @@
 -- @module windowManager
 
 local windowManager = {}
-local defaultResolution = {x = 1280, y = 720}
+local defaultResolution = {x = 0, y = 0}
+local displayindex = 1
+local nameWindow 
 local defaultScale = {x = defaultResolution.x / 256, y = defaultResolution.y / 144}
 local curentScale = {x = 5, y = 5}
 local isFullScreen = false
@@ -16,8 +18,18 @@ end
 
 --- Charge la configuration initiale de la fenêtre.
 function windowManager.load()
+
+    --[[ on recupere la config ]]
+    local  config = Resources.data.config
+    defaultResolution.x = config.window.width
+    defaultResolution.y = config.window.height
+    isFullScreen = config.window.fullscreen
+    nameWindow = config.window.title
+    
+    --[[ on charge la fenetre ]]
     windowManager.setResolution(defaultResolution.x, defaultResolution.y)
-    love.window.setTitle("Game")
+    --[[ on charge le titre de la fenetre ]]
+    love.window.setTitle(nameWindow)
     love.graphics.setDefaultFilter("nearest", "nearest")
     love.graphics.setBackgroundColor(0, 0, 0, 0)
     love.graphics.setLineStyle("rough")

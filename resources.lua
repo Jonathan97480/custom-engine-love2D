@@ -28,8 +28,9 @@ Resources.spriteSheet = {}
 
 -- Chargement des fichiers de données
 Resources.data = {
-    levels = love.filesystem.load("data/levels.lua")(),
-    config = love.filesystem.load("data/config.lua")(),
+    config = require("data/config"),
+    
+
 }
 
 -- chargement des modules
@@ -44,18 +45,21 @@ Resources.modules = {
     lib = require("lib/lib"),
     gameManager = require("data/game/gameManager"),
     sound = require("lib/sound"),
+    levelsManager = require("lib/levelsManager"),
+    BackgroundManager = require("lib/backgroundManager"),
+    luaToJson = require("outils/luaToJson"),
 
 }
 
 function loadFxSound(namefx)
 
     local fx ={}
-    fx.sound = love.audio.newSource( Resources.modules.paths.dir.sounds..namefx, "static")
+    fx.sound = love.audio.newSource( Resources.modules.paths.dir.fx..namefx, "static")
     fx.sound:setVolume(2)
     fx.sound:setLooping(false)
     fx.type = "fx"
     --[[ on récupère le non de son via le path sans extension ]]
-    local namefx = string.gsub(namefx, Resources.modules.paths.dir.sounds, "")
+    local namefx = string.gsub(namefx, Resources.modules.paths.dir.fx, "")
     namefx = string.gsub(namefx, ".mp3", "")
     fx.name = namefx
     return fx
@@ -68,19 +72,19 @@ end
 function loadMusic(nameMusic)
 
     local music ={}
-    music.sound = love.audio.newSource( Resources.modules.paths.dir.sounds..nameMusic, "stream")
+    music.sound = love.audio.newSource( Resources.modules.paths.dir.music..nameMusic, "stream")
     music.sound:setVolume(0.5)
     music.sound:setLooping(true)
     music.type = "music"
     --[[ on récupère le non de son via le path sans extension ]]
-    local nameMusic = string.gsub(nameMusic, Resources.modules.paths.dir.sounds, "")
+    local nameMusic = string.gsub(nameMusic, Resources.modules.paths.dir.music, "")
     nameMusic = string.gsub(nameMusic, ".mp3", "")
     music.name = nameMusic
     return music
 end
 
 
-Resources.loadSounds = function(path,type)
+Resources.loadSound = function(path,type)
     
 
     if type == "fx" then
@@ -96,6 +100,14 @@ Resources.unloadSounds = function(namefx)
     for i, fx in ipairs(Resources.sounds) do
         if fx.name == namefx then
             table.remove(Resources.sounds, i)
+        end
+    end
+end
+
+Resources.unloadImage = function(nameImage)
+    for i, image in ipairs(Resources.images) do
+        if image.name == nameImage then
+            table.remove(Resources.images, i)
         end
     end
 end
@@ -168,6 +180,15 @@ Resources.loadSprite = function(nameSprite)
     table.insert(Resources.sprite, sprite)
     return sprite
 
+end
+
+Resources.loadImage = function(nameImage)
+    local image = love.graphics.newImage(Resources.modules.paths.dir.images..nameImage)
+    image:setFilter("nearest", "nearest")
+    local nameImage = string.gsub(nameImage, Resources.modules.paths.dir.images, "")
+    nameImage = string.gsub(nameImage, ".jpg", "")
+    Resources.images[nameImage] = image
+    return image
 end
 
 Resources.unloadSprite = function(nameSprite)

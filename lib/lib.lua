@@ -7,17 +7,18 @@ local gameState =   listGameState[1]
 local lib = {}
 
 function lib.Load ()
+
     --[[ init window ]]
 Resources.modules.windowManager.load()
---[[ init map ]]
-Resources.modules.map.load("map_test","map_test_tileset.png")
+
 --[[ init camera ]]
 Resources.modules.camera.init()
 
---[[ init menu ]]
-Resources.modules.menuManager.load()
 --[[gameManager]]
 Resources.modules.gameManager.load()
+
+--[[ load levels manager  ]]
+Resources.modules.levelsManager.load()
 
 
 end
@@ -35,15 +36,25 @@ function lib.update(dt)
     --[[ update gameManager ]]
     Resources.modules.gameManager.update(dt)
 
+    --[[ update background ]]
+    Resources.modules.BackgroundManager.update(dt)
+
 end
 
 
 function lib.draw()
-   
+    local screenCanvas = love.graphics.newCanvas( Resources.data.config.window.width, Resources.data.config.window.height)
+    
+
+       --[[ draw background ]]
+       Resources.modules.BackgroundManager.draw()
     Resources.modules.windowManager.drawStart()   
+
+    --[[ draw map ]]
     Resources.modules.map.draw()
-   
+    --[[ draw game ]]
     Resources.modules.gameManager.draw()
+    --[[ draw end ]]
     Resources.modules.windowManager.drawEnd()
     --[[ draw menu and ui ]]
     Resources.modules.menuManager.draw()

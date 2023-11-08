@@ -40,6 +40,13 @@ end
 
 --- Dessine la carte à l'écran en prenant en compte la caméra.
 function map.draw()
+
+    ---[[ dessin pas la map si aucune map n'est chargée ]]
+    if map0 == nil then
+        return
+    end
+
+
     local cameraX, cameraY = Resources.modules.camera.getPosition()
     local cameraWidth, cameraHeight = Resources.modules.camera.getSize()
     local tileWidth = map0.tilesets[1].tilewidth
@@ -82,6 +89,11 @@ end
 -- @param y La position Y.
 -- @return `true` s'il y a une collision, sinon `false`.
 function map.getColision(x, y)
+
+    if map0 == nil then
+        return false
+    end
+
     for l = 1, #map0.layers do
         if map0.layers[l].name == "colision" then
             local layer = map0.layers[l]

@@ -6,379 +6,36 @@
     version : 1.0
     ]]
 
+--- Modules    
 local Button = require("lib/menu/button") 
 local Section = require("lib/menu/section")
+
+--- Variables locales
 local isDebug = true
+
+
 
 local menuManager = {}
 menuManager.menu = {}
-menuManager.curentMenu = "mainMenu"
+menuManager.curentMenu = nil
+menuManager.isPermanent = false --- si le menu est permanent ou non ( si il est permanent il ne se ferme pas avec la touche echap)
 
-local myMenu={
-    mainMenu ={
-        name="mainMenu",
-        position={x=(1280/2)-200,y=(720/2)-150},
-        size={width=400,height=300},
-        backgroundColor={r=0,g=0,b=0,a=0.5},
-        curentSection="main",
-        padding={
-            top=5,
-            left=5,
-            right=5,
-            bottom=5
-        },
-        section={
-            main={
-                position={x=0,y=0},
-                size={width=0,height=0},
-                name="main",
-                flex ={
-                    direction="column",
-                    align="center",
-                    justifyContent="center"
-                },
-                button={
-                    {
-                        type="button",
-                        position={x=0,y=0},
-                        size={width=100,height=30},
-                        isGraphique=false,
-                        image=nil,
-                        state="normal",
-                        color={
-                            active = {r=1,g=1,b=1,a=1},
-                            hover = {r=0,g=0,b=0,a=0},
-                            click = {r=0,g=0,b=0,a=0},
-                            disable = {r=0,g=0,b=0,a=0},
-
-                        },
-                        text={
-                            value="new game",
-                            font=love.graphics.newFont(12),
-                            align="center",
-                            margin={
-                                top=0,
-                                left=0,
-                                right=0,
-                                bottom=0
-                            },
-                            color={
-                                active = {r=0,g=0,b=0,a=1},
-                                hover = {r=0,g=0,b=0,a=0},
-                                click = {r=0,g=0,b=0,a=0},
-                                disable = {r=0,g=0,b=0,a=0},
-                            }
-                        },
-                        margin={
-                            top=5,
-                            left=0,
-                            right=0,
-                            bottom=0
-                        },
-                        event={
-                            click=function()
-                                print("play")
-                            end
-                        }
-                    },
-
-                    {
-                        text="load game",
-                        type="button",
-                        position={x=0,y=0},
-                        size={width=0,height=0},
-                        isGraphique=false,
-                        state="normal",
-                        image=nil,
-                        color={
-                            active = {r=1,g=1,b=1,a=1},
-                            hover = {r=0,g=0,b=0,a=0},
-                            click = {r=0,g=0,b=0,a=0},
-                            disable = {r=0,g=0,b=0,a=0},
-
-                        },
-                        text={
-                            value="load game",
-                            font=love.graphics.newFont(12),
-                            align="center",
-                            margin={
-                                top=0,
-                                left=0,
-                                right=0,
-                                bottom=0
-                            },
-                            color={
-                                active = {r=0,g=0,b=0,a=1},
-                                hover = {r=0,g=0,b=0,a=0},
-                                click = {r=0,g=0,b=0,a=0},
-                                disable = {r=0,g=0,b=0,a=0},
-                            }
-                        },
-                        margin={
-                            top=5,
-                            left=0,
-                            right=0,
-                            bottom=0
-                        },
-                        event={
-                            click=function()
-                                print("load")
-                            end
-                        }
-                    },
-                        
-                    {
-                        text="option",
-                        type="button",
-                        position={x=0,y=0},
-                        size={width=100,height=30},
-                        isGraphique=false,
-                        state="normal",
-                        image=nil,
-                        color={
-                            active = {r=1,g=1,b=1,a=1},
-                            hover = {r=0,g=0,b=0,a=0},
-                            click = {r=0,g=0,b=0,a=0},
-                            disable = {r=0,g=0,b=0,a=0},
-
-                        },
-                        text={
-                            value="options",
-                            font=love.graphics.newFont(12),
-                            align="center",
-                            margin={
-                                top=0,
-                                left=0,
-                                right=0,
-                                bottom=0
-                            },
-                            color={
-                                active = {r=0,g=0,b=0,a=1},
-                                hover = {r=0,g=0,b=0,a=0},
-                                click = {r=0,g=0,b=0,a=0},
-                                disable = {r=0,g=0,b=0,a=0},
-                            }
-                        },
-                        margin={
-                            top=5,
-                            left=0,
-                            right=0,
-                            bottom=0
-                        },
-                        event={
-                            click=function()
-                                menuManager.navigate("options")
-                             
-                            end
-                        }
-                    },
-    
-                    {
-                        text="credits",
-                        type="button",
-                        position={x=0,y=0},
-                        size={width=100,height=30},
-                        isGraphique=false,
-                        image=nil,
-                        state="normal",
-                        color={
-                            active = {r=1,g=1,b=1,a=1},
-                            hover = {r=0,g=0,b=0,a=0},
-                            click = {r=0,g=0,b=0,a=0},
-                            disable = {r=0,g=0,b=0,a=0},
-
-                        },
-                        text={
-                            value="credits",
-                            font=love.graphics.newFont(12),
-                            align="center",
-                            margin={
-                                top=0,
-                                left=0,
-                                right=0,
-                                bottom=0
-                            },
-                            color={
-                                active = {r=0,g=0,b=0,a=1},
-                                hover = {r=0,g=0,b=0,a=0},
-                                click = {r=0,g=0,b=0,a=0},
-                                disable = {r=0,g=0,b=0,a=0},
-                            }
-                        },
-                        margin={
-                            top=5,
-                            left=0,
-                            right=0,
-                            bottom=0
-                        },
-                        event={
-                            click=function()
-                                print("credits")
-                            end
-                        },
-                
-                    }
-                    
-                }
-            },
-            options={
-                position={x=0,y=0},
-                size={width=0,height=0},
-                name="options",
-                flex ={
-                    direction="column",
-                    align="center",
-                    justifyContent="center"
-                },
-                button={
-                    {
-                        type="button",
-                        position={x=0,y=0},
-                        size={width=100,height=30},
-                        isGraphique=false,
-                        image=nil,
-                        state="normal",
-                        color={
-                            active = {r=1,g=1,b=1,a=1},
-                            hover = {r=0,g=0,b=0,a=0},
-                            click = {r=0,g=0,b=0,a=0},
-                            disable = {r=0,g=0,b=0,a=0},
-
-                        },
-                        text={
-                            value="graphic",
-                            font=love.graphics.newFont(12),
-                            align="center",
-                            margin={
-                                top=0,
-                                left=0,
-                                right=0,
-                                bottom=0
-                            },
-                            color={
-                                active = {r=0,g=0,b=0,a=1},
-                                hover = {r=0,g=0,b=0,a=0},
-                                click = {r=0,g=0,b=0,a=0},
-                                disable = {r=0,g=0,b=0,a=0},
-                            }
-                        },
-                        margin={
-                            top=5,
-                            left=0,
-                            right=0,
-                            bottom=0
-                        },
-                        event={
-                            click=function()
-                                print("graphic")
-                            end
-                        }
-                    },
-
-                    {
-                        text="load game",
-                        type="button",
-                        position={x=0,y=0},
-                        size={width=0,height=0},
-                        isGraphique=false,
-                        state="normal",
-                        image=nil,
-                        color={
-                            active = {r=1,g=1,b=1,a=1},
-                            hover = {r=0,g=0,b=0,a=0},
-                            click = {r=0,g=0,b=0,a=0},
-                            disable = {r=0,g=0,b=0,a=0},
-
-                        },
-                        text={
-                            value="Sound",
-                            font=love.graphics.newFont(12),
-                            align="center",
-                            margin={
-                                top=0,
-                                left=0,
-                                right=0,
-                                bottom=0
-                            },
-                            color={
-                                active = {r=0,g=0,b=0,a=1},
-                                hover = {r=0,g=0,b=0,a=0},
-                                click = {r=0,g=0,b=0,a=0},
-                                disable = {r=0,g=0,b=0,a=0},
-                            }
-                        },
-                        margin={
-                            top=5,
-                            left=0,
-                            right=0,
-                            bottom=0
-                        },
-                        event={
-                            click=function()
-                                print("Sound")
-                            end
-                        }
-                    },
-                        
-                    {
-                        text="option",
-                        type="button",
-                        position={x=0,y=0},
-                        size={width=100,height=30},
-                        isGraphique=false,
-                        state="normal",
-                        image=nil,
-                        color={
-                            active = {r=1,g=1,b=1,a=1},
-                            hover = {r=0,g=0,b=0,a=0},
-                            click = {r=0,g=0,b=0,a=0},
-                            disable = {r=0,g=0,b=0,a=0},
-
-                        },
-                        text={
-                            value="Back",
-                            font=love.graphics.newFont(12),
-                            align="center",
-                            margin={
-                                top=0,
-                                left=0,
-                                right=0,
-                                bottom=0
-                            },
-                            color={
-                                active = {r=0,g=0,b=0,a=1},
-                                hover = {r=0,g=0,b=0,a=0},
-                                click = {r=0,g=0,b=0,a=0},
-                                disable = {r=0,g=0,b=0,a=0},
-                            }
-                        },
-                        margin={
-                            top=5,
-                            left=0,
-                            right=0,
-                            bottom=0
-                        },
-                        event={
-                            click=function()
-                               menuManager.navigate("main")
-                            end
-                        }
-                    }
-                    
-                }
-            }
-        }
-    }
-}
-
-
-
-
+---Recuperation des menus du jeu
+menuGame = require("data/game/files/menu")
 
 --- Fonction pour charger le gestionnaire de menu
-menuManager.load = function()
-    
-    for menuName, menu in pairs(myMenu) do
+menuManager.load = function( curentMenu)
+
+    if curentMenu == nil then
+        print("Error: curentMenu is nil")
+        return
+    end
+
+    menuManager.curentMenu = curentMenu
+
+    menuManager.isPermanent = menuGame[curentMenu].isPermanent
+
+    for menuName, menu in pairs(menuGame) do
         
         menuManager.createMenu(menu)
     
@@ -395,8 +52,25 @@ menuManager.load = function()
         end
         
     end
+
+    --[[ on active le menu si il est permanent ]]
+    if menuManager.isPermanent then
+        menuManager.activeMenu("main")
+    end
+
+end
+
+--- Fonction pour décharger le gestionnaire de menu
+menuManager.unload = function()
+    menuManager.menu = {}
+    menuManager.curentMenu = nil
+    menuManager.isPermanent = false
+
+    print("unload menu")
 end
  
+
+
 --- Fonction pour créer un menu
 -- @param menuData table
 menuManager.createMenu = function(menuData)
@@ -443,10 +117,19 @@ end
 --- Fonction pour dessiner le menu
 menuManager.draw = function()
 
-    --[[ si le menu n'est pas actif, ne dessinez rien ]]
-    if   not menuManager.menu[menuManager.curentMenu].isActive then
+    if menuManager.curentMenu == nil then
         return
     end
+
+    --[[ si le menu n'est pas actif, ne dessinez rien ]]
+    if isPermanent~=true then
+
+        if   not menuManager.menu[menuManager.curentMenu].isActive then
+            return
+        end
+
+    end
+
 
     local curentMenu = menuManager.menu[menuManager.curentMenu]
     local section = curentMenu[curentMenu.curentSection]
@@ -479,6 +162,10 @@ end
 
 --- Fonction pour gérer les clics de souris
 menuManager.mousepressed =function(x, y, button)
+
+    if menuManager.curentMenu == nil then
+        return
+    end
 
     if not menuManager.menu[menuManager.curentMenu].isActive then
         return
@@ -534,23 +221,39 @@ end
 
 --- Fonction pour gérer les touches du clavier
 menuManager.keypressed = function(key)
+
+    if menuManager.curentMenu == nil or menuManager.isPermanent==true then
+        return
+    end
+
     if key == "escape" then
         -- Si le menu est actuellement actif, fermez-le
         if menuManager.menu[menuManager.curentMenu].isActive then
             menuManager.menu[menuManager.curentMenu].isActive = false
         else
-            -- définir la position du menu et sa taille en se basant sur la résolution de la fenêtre de jeu
-            --et le positionner au centre de l'écran si vous n'avez pas défini la position et la taille du menu
-            menuManager.definePositionAndSizeMenu()
-
-            -- Activez le menu
+            --[[ si le menu n'est pas actif, activez-le ]]
             menuManager.activeCurentMenu("main")
         end
     end
 end
 
+--- active le menu 
+menuManager.activeMenu = function(menuName)
+   -- définir la position du menu et sa taille en se basant sur la résolution de la fenêtre de jeu
+   --et le positionner au centre de l'écran si vous n'avez pas défini la position et la taille du menu
+    menuManager.definePositionAndSizeMenu()
+
+    -- Activez le menu
+    menuManager.activeCurentMenu(menuName)
+end
+
 -- détections des mouvements de la sourie
 menuManager.mousemoved = function(x, y, dx, dy)
+
+    if menuManager.curentMenu == nil then
+        return
+    end
+
     if not menuManager.menu[menuManager.curentMenu].isActive then
         return
     end

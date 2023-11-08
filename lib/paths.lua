@@ -5,11 +5,13 @@ local Paths = {}
 -- Chemins vers les répertoires
 Paths.dir = {
     data = "data/",
-    images = "images/",
-    sprite = "images/sprite/",
-    spriteSheet = "images/spriteSheet/",
-    tileSet = "images/tileSet/",
+    images = "pictures/images/",
+    sprite = "pictures/sprite/",
+    spriteSheet = "pictures/spriteSheet/",
+    tileSet = "pictures/tileSet/",
     sounds = "sounds/",
+    music = "sounds/music/",
+    fx = "sounds/fx/",
     fonts = "fonts/",
     maps = "data/maps/",
 }
